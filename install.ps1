@@ -5,23 +5,28 @@ Write-Host "=== Настройка рабочего окружения ===" -For
 
 # 1. Проверка и установка Scoop
 if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
-    Write-Host "`n[1/5] Установка Scoop..." -ForegroundColor Yellow
+    Write-Host "`n[1/6] Установка Scoop..." -ForegroundColor Yellow
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
     Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 } else {
-    Write-Host "`n[1/5] Scoop уже установлен." -ForegroundColor Green
+    Write-Host "`n[1/6] Scoop уже установлен." -ForegroundColor Green
 }
 
+# Добавляем нужные бакеты (extras для утилит, nerd-fonts для шрифтов)
+Write-Host "  Проверка бакетов Scoop (extras, nerd-fonts)..." -ForegroundColor DarkGray
 if (!(scoop bucket list | Select-String "extras" -Quiet)) {
     scoop bucket add extras | Out-Null
+}
+if (!(scoop bucket list | Select-String "nerd-fonts" -Quiet)) {
+    scoop bucket add nerd-fonts | Out-Null
 }
 
 # 2. Проверка и настройка Git
 if (!(Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "`n[2/5] Установка Git..." -ForegroundColor Yellow
+    Write-Host "`n[2/6] Установка Git..." -ForegroundColor Yellow
     scoop install git
 } else {
-    Write-Host "`n[2/5] Git уже установлен." -ForegroundColor Green
+    Write-Host "`n[2/6] Git уже установлен." -ForegroundColor Green
 }
 
 Write-Host "  Применение глобальных настроек Git..." -ForegroundColor DarkGray
@@ -33,9 +38,9 @@ git config --global i18n.commitEncoding utf-8
 git config --global i18n.logOutputEncoding utf-8
 
 # 3. Клонирование репозитория
-Write-Host "`n[3/5] Загрузка конфигурационных файлов..." -ForegroundColor Yellow
+Write-Host "`n[3/6] Загрузка конфигурационных файлов..." -ForegroundColor Yellow
 if (Test-Path $DotfilesDir) {
-    Write-Host "Папка win-dotfiles уже существует. Синхронизируем с GitHub..." -ForegroundColor DarkGray
+    Write-Host "  Папка win-dotfiles уже существует. Синхронизируем с GitHub..." -ForegroundColor DarkGray
     Set-Location $DotfilesDir
     git fetch --all | Out-Null
     git reset --hard origin/main | Out-Null
@@ -44,9 +49,9 @@ if (Test-Path $DotfilesDir) {
 }
 
 # 4. Установка пакетов
-$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza", "terminal-icons")
+$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza", "fd", "fnm", "JetBrainsMono-NF")
 
-Write-Host "`n[4/5] Доступные пакеты для установки через Scoop:" -ForegroundColor Yellow
+Write-Host "`n[4/6] Доступные пакеты для установки через Scoop:" -ForegroundColor Yellow
 for ($i = 0; $i -lt $packages.Length; $i++) {
     Write-Host "$($i + 1). $($packages[$i])"
 }
@@ -71,8 +76,17 @@ if ($toInstall.Count -gt 0) {
     scoop install $toInstall
 }
 
-# 5. Создание символических ссылок
-Write-Host "`n[5/5] Настройка символических ссылок..." -ForegroundColor Yellow
+# 5. Установка модулей PowerShell
+Write-Host "`n[5/6] Установка модулей PowerShell..." -ForegroundColor Yellow
+if (!(Get-Module -ListAvailable -Name Terminal-Icons)) {
+    Write-Host "  Устанавливаем Terminal-Icons..." -ForegroundColor Cyan
+    Install-Module -Name Terminal-Icons -Repository PSGallery -Scope CurrentUser -Force
+} else {
+    Write-Host "  Terminal-Icons уже установлен." -ForegroundColor Green
+}
+
+# 6. Создание символических ссылок
+Write-Host "`n[6/6] Настройка символических ссылок..." -ForegroundColor Yellow
 
 function New-Symlink {
     param([string]$TargetFile, [string]$LinkPath)
@@ -96,7 +110,6 @@ function New-Symlink {
     }
 }
 
-# Обновленный путь к файлу PowerShell
 $RepoProfilePath = Join-Path $DotfilesDir "powershell\Microsoft.PowerShell_profile.ps1"
 
 if (Test-Path $RepoProfilePath) {
@@ -105,4 +118,10 @@ if (Test-Path $RepoProfilePath) {
     Write-Host "  Файл профиля не найден в репозитории: $RepoProfilePath" -ForegroundColor Red
 }
 
-Write-Host "`nГотово! Перезапустите PowerShell." -ForegroundColor Green
+Write-Host "`n=======================================================" -ForegroundColor Cyan
+Write-Host "Готово! Установка завершена." -ForegroundColor Green
+Write-Host "ВАЖНО: Чтобы иконки Terminal-Icons отображались корректно," -ForegroundColor Magenta
+Write-Host "откройте настройки Windows Terminal (Ctrl + ,) -> Профили ->" -ForegroundColor Magenta
+Write-Host "Оформление и выберите шрифт 'JetBrainsMono NF' (или другой Nerd Font)." -ForegroundColor Magenta
+Write-Host "После этого перезапустите терминал." -ForegroundColor Yellow
+Write-Host "=======================================================" -ForegroundColor Cyan
