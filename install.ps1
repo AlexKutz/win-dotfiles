@@ -1,4 +1,3 @@
-﻿
 $RepoUrl = "https://github.com/AlexKutz/win-dotfiles.git"
 $DotfilesDir = Join-Path $HOME "win-dotfiles"
 
