@@ -44,7 +44,7 @@ if (Test-Path $DotfilesDir) {
 }
 
 # 4. Установка пакетов
-$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza")
+$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza", "terminal-icons")
 
 Write-Host "`n[4/5] Доступные пакеты для установки через Scoop:" -ForegroundColor Yellow
 for ($i = 0; $i -lt $packages.Length; $i++) {
