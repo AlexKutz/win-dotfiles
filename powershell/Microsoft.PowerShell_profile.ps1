@@ -43,3 +43,23 @@ Set-Alias ll Get-ChildItem
 function snip {
     & "C:\Users\alex\Scripts\Snippets\Get-Snippet.ps1"
 }
+
+function obsidianPush {
+    $vaultPath = "C:\Users\alex\github\ObsidianNotes"
+
+    if (Test-Path $vaultPath) {
+        $currentPath = Get-Location
+        Set-Location $vaultPath
+        
+        Write-Host "🚀 Синхронизация Obsidian в $vaultPath..." -ForegroundColor Cyan
+        
+        git add .
+        git commit -m "update $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+        git push
+        
+        Set-Location $currentPath
+        Write-Host "✅ Готово!" -ForegroundColor Green
+    } else {
+        Write-Host "❌ Ошибка: Путь $vaultPath не найден!" -ForegroundColor Red
+    }
+}
