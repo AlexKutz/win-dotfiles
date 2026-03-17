@@ -34,6 +34,9 @@ return {
         settings = {
           javascript = {
             updateImportsOnFileMove = { enabled = "always" },
+	    suggest = {
+		    completeFunctionCalls = true, -- Чтобы сразу добавлял ()
+	    },
           },
           typescript = {
             updateImportsOnFileMove = { enabled = "always" },
