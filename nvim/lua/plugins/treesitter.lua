@@ -12,7 +12,8 @@ return {
         "query", 
         "javascript", 
         "typescript", 
-        "python" 
+        "python",
+        "c_sharp"
       },
       
       -- Автоматическая установка отсутствующих парсеров
