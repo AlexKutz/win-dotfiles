@@ -118,6 +118,16 @@ if (Test-Path $RepoProfilePath) {
     Write-Host "  Файл профиля не найден в репозитории: $RepoProfilePath" -ForegroundColor Red
 }
 
+$RepoNvimPath = Join-Path $DotfilesDir "nvim" # Укажи здесь точное имя папки конфига nvim в твоем репо
+$LocalNvimPath = Join-Path $env:LOCALAPPDATA "nvim"
+
+Write-Host "  Проверка конфигурации Neovim..." -ForegroundColor DarkGray
+if (Test-Path $RepoNvimPath) {
+    New-Symlink -TargetFile $RepoNvimPath -LinkPath $LocalNvimPath
+} else {
+    Write-Host "  [ПРОПУСК] Конфиг Neovim не найден в репозитории: $RepoNvimPath" -ForegroundColor Yellow
+}
+
 Write-Host "`n=======================================================" -ForegroundColor Cyan
 Write-Host "Готово! Установка завершена." -ForegroundColor Green
 Write-Host "ВАЖНО: Чтобы иконки Terminal-Icons отображались корректно," -ForegroundColor Magenta
