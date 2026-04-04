@@ -1,0 +1,11 @@
+[[input.prepend_keymap]]
+on   = "<Esc>"
+run  = "close"
+desc = "Cancel input"
+
+[mgr]
+prepend_keymap = [
+    { on = "<C-t>", run = 'shell "wt -d ."', desc = "Open Windows Terminal here" },
+    { on = "!", run='shell "powershell.exe" --block', desc="Open PowerShell here" }
+]
+
