@@ -49,7 +49,7 @@ if (Test-Path $DotfilesDir) {
 }
 
 # 4. Установка пакетов
-$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza", "fd", "fnm", "JetBrainsMono-NF")
+$packages = @("fzf", "zoxide", "neovim", "bun", "bat", "eza", "fd", "fnm", "ripgrep", "JetBrainsMono-NF", "yazi")
 
 Write-Host "`n[4/6] Доступные пакеты для установки через Scoop:" -ForegroundColor Yellow
 for ($i = 0; $i -lt $packages.Length; $i++) {
@@ -72,6 +72,15 @@ if ($selection -eq 'all') {
 }
 
 if ($toInstall.Count -gt 0) {
+    # Проверяем, был ли выбран yazi
+    if ($toInstall -contains "yazi") {
+        Write-Host "  Обнаружен Yazi. Добавляем необходимые зависимости..." -ForegroundColor DarkGray
+        $yaziDeps = @("ffmpeg", "7zip", "jq", "poppler", "fd", "ripgrep", "fzf", "zoxide", "resvg", "imagemagick")
+        
+        # Объединяем списки и удаляем дубликаты (чтобы не устанавливать fzf или fd дважды)
+        $toInstall = ($toInstall + $yaziDeps) | Select-Object -Unique
+    }
+
     Write-Host "Устанавливаем: $($toInstall -join ', ')..." -ForegroundColor Cyan
     scoop install $toInstall
 }
