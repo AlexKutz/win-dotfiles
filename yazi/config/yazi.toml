@@ -22,3 +22,17 @@ run  = "git"
 id   = "git"
 name = "*/"
 run  = "git"
+
+# Шаг 1: Описываем сами программы (openers)
+[[opener.pdf-zathura]]
+run = "zathura \"$@\""
+desc = "Открыть в Zathura"
+
+[[opener.pdf-okular]]
+run = "okular \"$@\""
+desc = "Открыть в Okular"
+
+# Шаг 2: Привязываем программы к PDF-файлам
+[[open.rules]]
+mime = "application/pdf"
+use = [ "pdf-zathura", "pdf-okular", "reveal" ]

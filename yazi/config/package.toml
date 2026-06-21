@@ -13,6 +13,11 @@ use = "yazi-rs/plugins:git"
 rev = "19dc890"
 hash = "8042bdcf33a3d87b9430bb65e4511461"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:mime-ext"
+rev = "38efe09"
+hash = "cdc2f9417e2f0785dfd3c9871b8738bb"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
 rev = "2d73b79"
